@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="rus">
+	<head>
+		<title>Title</title>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+		<!-- Bootstrap CSS -->
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+			crossorigin="anonymous"
+		/>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+			<a class="navbar-brand" href="#">Logo</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarColor02">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="./index.html">Главная</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="http://beejee-coding-challenge.zzz.com.ua/login.html">Вход <span class="sr-only">(current)</span></a>
+					</li>
+					<li id="exit-user" class="nav-item" hidden="true">
+						<a class="nav-link" href="./index.html">Выход</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="container h-100">
+			<div class="pt-5 mt-5 d-flex justify-content-center">
+				<form class="w-75 px-5" id="signup-form" method="POST">
+					<!-- <div class="form-group row">
+						<label for="staticEmail" class="col-sm-2 col-form-label">Имя</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="staticEmail" value="" />
+						</div>
+                    </div> -->
+
+					<div class="form-group mb-0 row">
+						<label for="inputLogin" class="col-sm-2 col-form-label">Логин</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="inputLogin" name="login" placeholder="" />
+						</div>
+					</div>
+					<!-- обрабатывается на стороне сервера, выводится если такой пользователь уже существует -->
+					<div id="invalid-login-exist" class="text-danger text-right small" hidden="true">Пользователь с таким логином уже существует</div>
+					<!-- обрабатывается на стороне клиента, выводится, если логин не был введен -->
+					<div id="invalid-login-null" class="text-danger text-right small" hidden="true">Вы не ввели логин</div>
+
+					<div class="form-group mt-4 mb-0 row">
+						<label for="inputEmail" class="col-sm-2 col-form-label">Почта</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="inputEmail" name="email" />
+						</div>
+					</div>
+					<!-- обрабатывается на стороне сервера, выводится если такой пользователь с такой почтой уже существует -->
+					<div id="invalid-email-exist" class="text-danger text-right small" hidden="true">Пользователь с такой почтой уже существует</div>
+					<!-- обрабатывается на стороне клиента, выводится если почта не прошла валидацию -->
+					<div id="invalid-email-validate" class="text-danger text-right small" hidden="true">Вы неправильно ввели почту</div>
+					<!-- обрабатывается на стороне клиента, выводится, если почта не была введена -->
+					<div id="invalid-email-null" class="text-danger text-right small" hidden="true">Вы не ввели почту</div>
+
+					<div class="form-group mt-4 mb-0 row">
+						<label for="inputPassword" class="col-sm-2 col-form-label">Пароль</label>
+						<div class="col-sm-10">
+							<input type="password" class="form-control" id="inputPassword" name="password" placeholder="" />
+						</div>
+					</div>
+					<!-- обрабатывается на стороне клиента, выводится, если пароль не был введен -->
+					<div id="invalid-password-null" class="text-danger text-right small" hidden="true">Вы не ввели пароль</div>
+					<!-- обрабатывается на стороне клиента, выводится, если пароль по длине превышает 30 символов -->
+					<div id="invalid-password-30" class="text-danger text-right small" hidden="true">Пароль слижком длинный, пароль должен быть не больше 30 символов!</div>
+				</form>
+			</div>
+			<div class="w-75 px-5 mt-5 mx-auto">
+				<input id="signup" class="btn w-100 btn-dark" type="submit" value="Регистрация" />
+				<a class="mt-2 w-100 btn btn-primary" href="./login.html" role="button">Уже есть аккаунт?</a>
+			</div>
+		</div>
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+			integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+			integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+			crossorigin="anonymous"
+		></script>
+		<script src="js/user.js"></script>
+		<script src="./js/registration.js"></script>
+	</body>
+</html>
