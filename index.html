@@ -6,6 +6,20 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
+		<style>
+			.accordion-toggle + tr {
+				display: none;
+			}
+			.accordion-toggle + tr:hover {
+				background-color: rgba(0, 0, 0, 0) !important;
+			}
+			.table div.row {
+				padding: 0.75rem;
+			}
+			.table div.row.body:hover {
+				background-color: rgba(0, 0, 0, 0.075);
+			}
+		</style>
 		<!-- Bootstrap CSS -->
 		<link
 			rel="stylesheet"
@@ -13,6 +27,7 @@
 			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 			crossorigin="anonymous"
 		/>
+		<script src="https://kit.fontawesome.com/b6732c7ee8.js" crossorigin="anonymous"></script>
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -24,7 +39,7 @@
 			<div class="collapse navbar-collapse" id="navbarColor02">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<a class="nav-link" href="http://beejee-coding-challenge.zzz.com.ua/index.html">Главная <span class="sr-only">(current)</span></a>
+						<a class="nav-link" href="./index.html">Главная <span class="sr-only">(current)</span></a>
 					</li>
 				</ul>
 				<ul id="enter" class="navbar-nav ml-auto">
@@ -42,14 +57,74 @@
 			</div>
 		</nav>
 		<div class="container">
-			<table class="table" id="table-tasks">
+			<table class="table table-hover" id="table-tasks">
 				<thead>
 					<tr class="d-flex">
-						<th class="col-1">ID</th>
-						<th class="col-4">Задание</th>
-						<th class="col-3">Имя пользователя</th>
-						<th class="col-3">Почта</th>
-						<th class="col-1">Статус</th>
+						<th class="col-1">
+							<a sort="id" class="not-sorted text-dark">ID <i id="sort-id" class="fas fa-sort"></i></a>
+						</th>
+						<th class="col-4">
+							<a sort="task" class="not-sorted text-dark">Задание <i id="sort-task" class="fas fa-sort"></i></a>
+						</th>
+						<th class="col-3">
+							<a sort="name" class="not-sorted text-dark">Имя пользователя <i id="sort-name" class="fas fa-sort"></i></a>
+						</th>
+						<th class="col-3">
+							<a sort="email" class="not-sorted text-dark">Почта <i id="sort-email" class="fas fa-sort"></i></a>
+						</th>
+						<th class="col-1">
+							<a sort="status" class="not-sorted text-dark">Статус <i id="sort-status" class="fas fa-sort"></i></a>
+						</th>
+					</tr>
+					<!-- Шаблон, куда записываются данные -->
+					<tr id="pattern-data-row" hidden="true">
+						<th scope="row" class="col-1" data-place="id"></th>
+						<td class="col-4" data-place="task"></td>
+						<td class="col-3" data-place="name"></td>
+						<td class="col-3" data-place="email"></td>
+						<td class="col-1">
+							<div class="d-flex">
+								<div class="mx-auto">
+									<input class="form-check-input" data-place="status" type="checkbox" />
+								</div>
+							</div>
+							<div class="d-flex">
+								<div class="ml-auto" data-toggle="tooltip" data-placement="right" title="Изменено администратором">
+									<i class="mr-2 fas fa-pencil-alt" hidden="true"></i>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<!-- шаблон для блока изменения данных -->
+					<tr class="border-left border-right" id="pattern-form" hidden="true">
+						<td colspan="5" class="h-25">
+							<div class="collapse in">
+								<div class="mt-3 d-flex justify-content-center">
+									<form class="w-75 px-5" task-id="-1" method="POST">
+										<div class="row pb-0">
+											<div class="col pl-0">Имя пользователя:</div>
+											<div class="col">Почта:</div>
+										</div>
+										<div class="form-group mb-0 row">
+											<input type="text" class="form-control col mr-1" name="name" placeholder="Имя пользователя" />
+											<input type="text" class="form-control col ml-1" name="email" placeholder="Почта" />
+										</div>
+
+										<div error="change-email-validate" class="text-danger text-right small" hidden="true">Вы неправильно ввели почту</div>
+										<div class="mt-3">Задание:</div>
+										<div class="form-group mb-0 row">
+											<textarea class="form-control" name="task" placeholder="Задание"></textarea>
+										</div>
+										<div error="change-null" class="text-danger text-right small" hidden="true">Все поля должны быть заполнены</div>
+										<div class="form-group row"></div>
+										<input type="radio" name="id" value="-1" hidden="true" checked />
+									</form>
+								</div>
+								<div class="mt-3 px-5 d-flex justify-content-center">
+									<input type="submit" class="w-75 btn btn-primary" placeholder="Добавить" onclick="ChangeTask(-1)" />
+								</div>
+							</div>
+						</td>
 					</tr>
 				</thead>
 				<tbody></tbody>
@@ -97,7 +172,62 @@
 			crossorigin="anonymous"
 		></script>
 		<script src="js/user.js"></script>
-		<script src="js/addTask.js"></script>
+		<script src="js/task.js"></script>
 		<script src="js/table.js"></script>
+		<script>
+			//скрипт который "выдвигает" блок, где нужно изменять данные
+			function collapse(id) {
+				if (user.role == "admin") {
+					let trToHide; //родительский блок tr, который после "закрытия" "выдвигающегося" блока, будет спрятан
+					let parameters = {
+						//параметры для открытия блока
+						duration: 300,
+					};
+					let h_parameters = {
+						//параметры для закрытия блока
+						duration: 300,
+						done: function () {
+							trToHide.toggle();
+						},
+					};
+
+					trToHide = $("#" + id).next(); //следующий блок после нажатого будет выдвинут
+					if (
+						$("#" + id)
+							.next()
+							.is(":visible")
+					) {
+						trToHide.find(".collapse").slideToggle(h_parameters);
+					} else {
+						$("#" + id)
+							.next()
+							.toggle();
+						trToHide.find(".collapse").slideToggle(parameters);
+					}
+				}
+			}
+			//Не знаю почему, но это совершенно не работало (когда я нажимал на элемент
+			//(автоматически созданный) tr, то ничего не происходило, а когда нажимал на тот который я скопировал и вставил в html файл, то он работал)
+			//С этой штукой я возился бог знает сколько времени....
+
+			/*$(".accordion-toggle").on("click", function () {
+				trToHide = $(this).next();
+				console.log(123);
+				if ($(this).next().is(":visible")) {
+					trToHide.find(".collapse").slideToggle(h_parameters);
+					//setTimeout($(this).next().hide, 300);
+					//$(this).next().toggle();
+				} else {
+					$(this).next().toggle();
+					trToHide.find(".collapse").slideToggle(parameters);
+				}
+			});*/
+
+			//Вот этот элемент не работал...
+			//Скажите (если сами знаете), почему это не работало?
+			$("tr").click(function () {
+				console.log($(this));
+			});
+		</script>
 	</body>
 </html>

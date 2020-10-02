@@ -79,7 +79,7 @@ function Signup() {
 
 					function (msg) {
 						console.log(msg);
-						document.location.href = "http://beejee-coding-challenge.zzz.com.ua/index.html"; //после регистрации данные записываются в куки и происходит переход на главную страницу
+						document.location.href = "./index.html"; //после регистрации данные записываются в куки и происходит переход на главную страницу
 					}
 				);
 			}

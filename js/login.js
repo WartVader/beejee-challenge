@@ -7,7 +7,7 @@ function Login() {
 			// получен ответ сервера
 			console.log(msg);
 			if (msg == "true") {
-				document.location.href = "http://beejee-coding-challenge.zzz.com.ua/index.html";
+				document.location.href = "./index.html";
 				document.getElementById("exit-user").hidden = true;
 			} else if (msg == "false") {
 				$("#invalid-entrance").attr("hidden", false);

@@ -59,10 +59,25 @@ function AddTask()
     $email = mysqli_real_escape_string($connection, $_POST['email']);
     $task = mysqli_real_escape_string($connection, $_POST['task']);
 
-    $sql = "INSERT INTO `tasks`(id, task, name, email, status) VALUES ('', '$task', '$name', '$email', false)";
+    $sql = "INSERT INTO `tasks`(id, task, name, email, status, edit) VALUES ('', '$task', '$name', '$email', false, false)";
     mysqli_query($connection, $sql) or die(mysqli_error($connection));
 
     return true;
+}
+
+function ChangeTask()
+{
+    include('settings.php');
+    include_once('user.php');
+    if (isAdmin()) {
+        $id = $_POST['id'];
+        $email = $_POST['email'];
+        $task = $_POST['task'];
+        $name = $_POST['name'];
+        $sql = sprintf("UPDATE tasks SET name = '$name', task = '$task',  email = '$email', edit = true  WHERE id = $id");
+        mysqli_query($connection, $sql) or die(mysqli_error($connection));
+        return true;
+    } else return false;
 }
 
 function CountTasks()
@@ -77,20 +92,23 @@ function CountTasks()
 function LoadTasks()
 {
     include('settings.php');
-    $n = ($_POST['page'] - 1) * 3;
-    $orderby = $_POST['orderby'] ?? 'id';
-    if ($_POST['reverse'] == true) {
-        $desc = "";
-    } else {
-        $desc = "DESC";
+    $param = "";
+    $sortby = "";
+    $desc = "";
+    if (!$_POST['all']) {
+        $param = "LIMIT 3 OFFSET " . ($_POST['page'] - 1) * 3;
+        $sortby = "ORDER BY " . $_POST['sortby'] ?? 'id';
+        if (json_decode($_POST['reverse'])  == false) {
+            $desc = "";
+        } else {
+            $desc = "DESC";
+        }
     }
 
-
-    $sql_tasks = sprintf("SELECT * FROM tasks ORDER BY $orderby $desc LIMIT 3 OFFSET $n"); //берет по три элемента, начиная с элемента под индексом n
+    $sql_tasks = sprintf("SELECT * FROM tasks $sortby $desc $param");
     $result_tasks = mysqli_query($connection, $sql_tasks)  or die(mysqli_error($connection));
 
     $row = mysqli_fetch_all($result_tasks, MYSQLI_ASSOC);
-
     return $row;
 }
 

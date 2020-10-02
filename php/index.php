@@ -1,4 +1,14 @@
 <?php
+
+
+spl_autoload_register(function ($class) {
+    $path = str_replace('\\', '/', $class . '.php');
+    if (file_exists($path)) {
+        require $path;
+    }
+    include 'classes/' . $class . '.class.php';
+});
+
 // 1) require конфига и других файлов
 require_once('settings.php');
 require_once('user.php');
@@ -39,6 +49,9 @@ switch ($method) {
         break;
     case 'addTask':
         $res = AddTask();
+        break;
+    case 'changeTask':
+        $res = ChangeTask();
         break;
 }
 

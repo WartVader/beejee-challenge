@@ -1,8 +1,12 @@
 <?php
-define('HOST', 'mysql.zzz.com.ua');
+/* define('HOST', 'mysql.zzz.com.ua');
 define('USER', 'wartvader');
 define('PASSWORD', 'Password123');
-define('DB', 'wartvader');
+define('DB', 'wartvader'); */
+define('HOST', 'localhost');
+define('USER', 'root');
+define('PASSWORD', '');
+define('DB', 'beejee');
 //define('DBanother', 'my_db');
 
 $connection = mysqli_connect(HOST, USER, PASSWORD, DB);
